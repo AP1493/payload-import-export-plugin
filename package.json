@@ -1,16 +1,16 @@
 {
  "name": "import-export-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Payload CMS plugin for import/export functionality",
   "license": "MIT",
   "author": "Alay Patel <alaypatel140903@gmail.com>",
-  "homepage": "https://github.com/your-username/import-export-plugin#readme",
+  "homepage": "https://github.com/AP1493/payload-import-export-plugin#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/import-export-plugin.git"
+    "url": "https://github.com/AP1493/payload-import-export-plugin.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/import-export-plugin/issues"
+    "url": "https://github.com/AP1493/payload-import-export-plugin/issues"
   },
   "type": "module",
   "main": "./dist/index.js",

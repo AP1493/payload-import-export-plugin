@@ -1,0 +1,77 @@
+# === Node modules ===
+node_modules/
+.pnpm/
+.pnp.*
+*.tsbuildinfo
+
+# === Output directories ===
+dist/
+.next/
+out/
+coverage/
+build/
+
+# === Logs and temp files ===
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+turbo-debug.log*
+.log/
+*.log
+*.cache
+.cache/
+.cache-loader/
+tmp/
+temp/
+
+# === System files ===
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# === IDE configs ===
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# === Environment files ===
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# === Payload CMS specific ===
+payload.db
+uploads/
+.migrations/
+
+# === TypeScript ===
+*.tsbuildinfo
+
+# === Jest ===
+jest.config.js
+coverage/
+
+# === SWC ===
+*.swc
+.swcrc
+
+# === ESLint/Prettier cache ===
+.eslintcache
+.prettiercache
+
+# === Misc ===
+*.tgz
+*.lock-wrapped
+
+# === Optional: Next.js build export ===
+export/
+
+# === Optional: VS Code Project Settings ===
+*.code-workspace

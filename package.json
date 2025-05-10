@@ -1,6 +1,6 @@
 {
  "name": "import-export-plugin",
-  "version": "1.3.0",
+  "version": "1.0.0",
   "description": "A Payload CMS plugin for import/export functionality",
   "license": "MIT",
   "author": "Alay Patel <alaypatel140903@gmail.com>",

@@ -19,13 +19,13 @@ Install the plugin using your package manager:
 
 ```bash
 # Using pnpm
-pnpm add @your-namespace/import-export-plugin
+pnpm add import-export-plugin
 
 # Using npm
-npm install @your-namespace/import-export-plugin
+npm install import-export-plugin
 
 # Using yarn
-yarn add @your-namespace/import-export-plugin
+yarn add import-export-plugin
 ```
 
 ---
@@ -36,7 +36,7 @@ Add the plugin to your Payload config (`payload.config.ts` or `payload.config.js
 
 ```ts
 import { buildConfig } from 'payload';
-import importExportPlugin from '@your-namespace/import-export-plugin';
+import importExportPlugin from 'import-export-plugin';
 
 export default buildConfig({
   collections: [
@@ -45,7 +45,7 @@ export default buildConfig({
   plugins: [
     importExportPlugin({
      collections: {
-        posts: true, //collection slug name and enable/disable import/export functionality
+        posts: true, // collection slug name and enable/disable import/export functionality
       },
     }),
   ],

@@ -61,6 +61,23 @@ export default buildConfig({
         maxPerDoc: 10,
       },
     },
+    {
+      slug:"testcoll",
+      fields:[
+        {
+          name:"fullname",
+          type:"text",
+          label:"Full Name",
+          required:true,
+        }
+      ],
+       versions: {
+        drafts: {
+          // autosave:true
+        },
+        maxPerDoc: 10,
+      },
+    },
   ],
   db: postgresAdapter({
     pool: {
@@ -77,6 +94,7 @@ export default buildConfig({
       collections: {
         posts: true,
         newCollectiondummy: true,
+        testcoll:true,
       },
     }),
   ],

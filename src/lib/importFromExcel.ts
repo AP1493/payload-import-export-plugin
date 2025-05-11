@@ -25,7 +25,6 @@ export const handleImportFile = async (
       let jsonData: any[] = [];
 
       if (fileName.endsWith(".json")) {
-        // ======== Added: Handle direct JSON import =========
         try {
           jsonData = JSON.parse(e.target?.result as string);
         } catch (err) {
@@ -34,7 +33,6 @@ export const handleImportFile = async (
           return;
         }
       } else {
-        // ======== Default: XLSX file parsing =========
         const data = e.target?.result;
         const workbook = XLSX.read(data, { type: "array" });
         const sheetName = workbook.SheetNames[0];
@@ -60,7 +58,6 @@ export const handleImportFile = async (
         .map((field: any) => field.name);
 
       const processedData = jsonData.map((item: any) => {
-        // If JSON was from XLSX, keys will be flat — unflatten them
         const nestedItem = fileName.endsWith(".json")
           ? item
           : unflattenObject(item);
@@ -79,8 +76,7 @@ export const handleImportFile = async (
         try {
           let method = "POST";
           let url = `/api/${segments[1]}`;
-
-          if (item.id) {
+          if (item.id!==undefined) {
             const checkUrl = `/api/${segments[1]}/${item.id}`;
             const checkRes = await fetch(checkUrl);
 
@@ -102,7 +98,8 @@ export const handleImportFile = async (
             headers: { "Content-Type": "application/json" },
             method,
           });
-
+          console.log(item,"eefwff")
+          console.log(response,"responose")
           if (!response.ok) {
             throw new Error(
               `Failed to ${method.toLowerCase()} item: ${JSON.stringify(item)}`
@@ -123,9 +120,9 @@ export const handleImportFile = async (
     };
 
     if (fileName.endsWith(".json")) {
-      reader.readAsText(file); // ======== Read as plain text for JSON
+      reader.readAsText(file);
     } else {
-      reader.readAsArrayBuffer(file); // ======== Read as binary for XLSX
+      reader.readAsArrayBuffer(file);
     }
   } catch (err) {
     if (onComplete) {onComplete();}

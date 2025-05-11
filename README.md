@@ -101,3 +101,9 @@ This project is maintained and developed by:
 [Devraj Gajnani](https://github.com/devraj-O7)
 
 ---
+
+## ⚠️ Important
+The Generate Template feature inside the import workflow only works when there is at least one or more rows of data present in the selected collection.
+If the collection is empty, the template generation will not function as expected.
+
+---

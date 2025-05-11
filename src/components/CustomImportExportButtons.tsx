@@ -48,7 +48,8 @@ export const CustomImportExportButtons: React.FC = () => {
     async (
       selectedFields: string[],
       includeDraft: boolean,
-      exportType: string
+      exportType: string,
+      template?:boolean
     ) => {
       try {
         if (segments) {
@@ -56,7 +57,8 @@ export const CustomImportExportButtons: React.FC = () => {
             segments,
             includeDraft,
             exportType,
-            selectedFields
+            selectedFields,
+            template
           );
         }
       } finally {
@@ -158,6 +160,7 @@ export const CustomImportExportButtons: React.FC = () => {
         isOpen={isImportDialogOpen}
         onClose={closeImportDialog}
         segments={segments}
+                onExport={onExport}
       />
     </>
   );

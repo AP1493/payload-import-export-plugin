@@ -6,7 +6,6 @@ import { Button, CloseMenuIcon } from "@payloadcms/ui";
 // import type React from "react"
 import React, { useRef, useState } from "react";
 
-import { generateExcelTemplate } from "../lib/generateExcelTemplate.js";
 import { handleImportFile } from "../lib/importFromExcel.js";
 import { FieldSelectionDialog } from "./FieldSelectionDialog.js";
 interface ImportDialogProps {
@@ -17,6 +16,12 @@ interface ImportDialogProps {
     setSelectedFile?: React.Dispatch<React.SetStateAction<File | null>>
   ) => void;
   segments: ParamValue;
+   onExport: (
+    selectedFields: string[],
+    includeDraft: boolean,
+    exportType: string,
+    template?:boolean
+  ) => void;
 }
 
 export const ImportDialog: React.FC<ImportDialogProps> = ({
@@ -25,6 +30,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
   isOpen,
   onClose,
   segments,
+  onExport
 }) => {
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
@@ -44,8 +50,8 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
     setIsTemplateDialogOpen(false);
   };
 
-  const handleGenerateTemplate = (selectedFields: string[]) => {
-    generateExcelTemplate(segments, selectedFields);
+  const handleGenerateTemplate = (selectedFields: string[], includeDraft: boolean, exportType: string) => {
+    onExport(Array.from(selectedFields), includeDraft, exportType,true);
     setIsTemplateDialogOpen(false);
   };
 

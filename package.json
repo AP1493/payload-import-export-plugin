@@ -101,7 +101,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry":"https://www.npmjs.com/package/import-export-plugin"
+    "registry":"https://github.com/AP1493/payload-import-export-plugin.git"
   },
   "packageManager": "pnpm@10.10.0",
   "keywords": [

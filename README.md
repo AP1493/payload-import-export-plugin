@@ -108,5 +108,3 @@ If the collection is empty, the template generation will not function as expecte
 
 ---
 
-## Keywords
-payloadcms, payload import export, payload plugin, payload import, payload export, json import, xlsx import, json export, xlsx export, payloadcms plugin,headless cms, headless cms plugin, payload collection tools

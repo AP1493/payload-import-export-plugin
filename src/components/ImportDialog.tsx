@@ -1,13 +1,12 @@
 "use client";
 
 import type { ParamValue } from "next/dist/server/request/params.js";
-
-import { Button, CloseMenuIcon } from "@payloadcms/ui";
-// import type React from "react"
-import React, { useRef, useState } from "react";
+import { Button, CloseMenuIcon, useTheme } from "@payloadcms/ui";
+import React, { useEffect, useRef, useState } from "react";
 
 import { handleImportFile } from "../lib/importFromExcel.js";
 import { FieldSelectionDialog } from "./FieldSelectionDialog.js";
+
 interface ImportDialogProps {
   config: any;
   data: any[];
@@ -16,11 +15,11 @@ interface ImportDialogProps {
     setSelectedFile?: React.Dispatch<React.SetStateAction<File | null>>
   ) => void;
   segments: ParamValue;
-   onExport: (
+  onExport: (
     selectedFields: string[],
     includeDraft: boolean,
     exportType: string,
-    template?:boolean
+    template?: boolean
   ) => void;
 }
 
@@ -30,44 +29,38 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
   isOpen,
   onClose,
   segments,
-  onExport
+  onExport,
 }) => {
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+    const { theme } = useTheme()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setSelectedFile(file);
   };
 
-  const handleOpenTemplateDialog = () => {
-    setIsTemplateDialogOpen(true);
-  };
+  const handleOpenTemplateDialog = () => setIsTemplateDialogOpen(true);
+  const handleCloseTemplateDialog = () => setIsTemplateDialogOpen(false);
 
-  const handleCloseTemplateDialog = () => {
-    setIsTemplateDialogOpen(false);
-  };
-
-  const handleGenerateTemplate = (selectedFields: string[], includeDraft: boolean, exportType: string) => {
-    onExport(Array.from(selectedFields), includeDraft, exportType,true);
+  const handleGenerateTemplate = (
+    selectedFields: string[],
+    includeDraft: boolean,
+    exportType: string
+  ) => {
+    onExport(Array.from(selectedFields), includeDraft, exportType, true);
     setIsTemplateDialogOpen(false);
   };
 
   const handleImport = async () => {
-    if (!selectedFile || !fileInputRef.current) {
-      return;
-    }
-
+    if (!selectedFile || !fileInputRef.current) return;
     setIsImporting(true);
 
     try {
-      // Create a synthetic event to pass to handleImportFile
       const syntheticEvent = {
-        target: {
-          files: [selectedFile],
-        },
+        target: { files: [selectedFile] },
       } as unknown as React.ChangeEvent<HTMLInputElement>;
 
       await handleImportFile(
@@ -83,21 +76,22 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
     } catch (error) {
       setIsImporting(false);
       setSelectedFile(null);
-
       throw new Error(`${error}`);
     }
   };
 
   const handleClearFile = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
     setSelectedFile(null);
   };
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
+
+  const bgColor = theme === "dark" ? "#000" : "#fff";
+  const textColor = theme === "dark" ? "#fff" : "#000";
+  const borderColor = theme === "dark" ? "#333" : "#ccc";
+  const subTextColor = theme === "dark" ? "#aaa" : "#666";
+  const fileBoxColor = theme === "dark" ? "#111" : "#f3f3f3";
 
   return (
     <div
@@ -116,7 +110,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
     >
       <div
         style={{
-          backgroundColor: "#000",
+          backgroundColor: bgColor,
           borderRadius: "8px",
           boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
           maxHeight: "90vh",
@@ -129,7 +123,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
         <div
           style={{
             alignItems: "center",
-            borderBottom: "1px solid #333",
+            borderBottom: `1px solid ${borderColor}`,
             display: "flex",
             justifyContent: "space-between",
             padding: "16px 24px",
@@ -137,7 +131,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
         >
           <h2
             style={{
-              color: "#fff",
+              color: textColor,
               fontSize: "20px",
               fontWeight: 600,
               margin: 0,
@@ -148,9 +142,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
           <div
             onClick={() => onClose()}
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                onClose();
-              }
+              if (e.key === "Enter" || e.key === " ") onClose();
             }}
             role="button"
             style={{
@@ -172,10 +164,11 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
             padding: "24px",
           }}
         >
+          {/* Template Download */}
           <div
             style={{
-              backgroundColor: "#000",
-              border: "1px solid #333",
+              backgroundColor: bgColor,
+              border: `1px solid ${borderColor}`,
               borderRadius: "8px",
               marginBottom: "24px",
               padding: "12px",
@@ -183,7 +176,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
           >
             <h3
               style={{
-                color: "#fff",
+                color: textColor,
                 fontSize: "16px",
                 fontWeight: 600,
                 margin: "0 0 5px 0",
@@ -193,37 +186,32 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
             </h3>
             <p
               style={{
-                color: "#aaa",
+                color: subTextColor,
                 fontSize: "14px",
                 lineHeight: 1.5,
               }}
             >
               Download an Excel template with the headers for importing data.
             </p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-              }}
-            >
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <Button buttonStyle="primary" onClick={handleOpenTemplateDialog}>
                 Download Excel Template
               </Button>
             </div>
           </div>
 
+          {/* File Import Section */}
           <div
             style={{
-              backgroundColor: "#000",
-              border: "1px solid #333",
+              backgroundColor: bgColor,
+              border: `1px solid ${borderColor}`,
               borderRadius: "8px",
               padding: "12px",
             }}
           >
             <h3
               style={{
-                color: "#fff",
+                color: textColor,
                 fontSize: "16px",
                 fontWeight: 600,
                 margin: "0 0 5px 0",
@@ -243,12 +231,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
             >
               {!selectedFile && (
                 <>
-                  <p
-                    style={{
-                      color: "#aaa",
-                      fontSize: "14px",
-                    }}
-                  >
+                  <p style={{ color: subTextColor, fontSize: "14px" }}>
                     Select an Excel file (.xlsx, .json) to import data
                   </p>
                   <Button onClick={() => fileInputRef.current?.click()}>
@@ -269,10 +252,10 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
                 <div
                   style={{
                     alignItems: "center",
-                    backgroundColor: "#111",
-                    border: "1px solid #333",
+                    backgroundColor: fileBoxColor,
+                    border: `1px solid ${borderColor}`,
                     borderRadius: "6px",
-                    color: "#fff",
+                    color: textColor,
                     display: "flex",
                     fontSize: "14px",
                     justifyContent: "space-between",
@@ -294,9 +277,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
                   <div
                     onClick={handleClearFile}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        onClose();
-                      }
+                      if (e.key === "Enter" || e.key === " ") onClose();
                     }}
                     role="button"
                     style={{
@@ -315,10 +296,11 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
           </div>
         </div>
 
+        {/* Bottom Buttons */}
         <div
           style={{
-            backgroundColor: "#000",
-            borderTop: "1px solid #333",
+            backgroundColor: bgColor,
+            borderTop: `1px solid ${borderColor}`,
             display: "flex",
             gap: "12px",
             justifyContent: "flex-end",
@@ -327,9 +309,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
         >
           <Button onClick={() => onClose()}>Cancel</Button>
           {isImporting ? (
-            <Button disabled={true} onClick={handleImport}>
-              Importing...
-            </Button>
+            <Button disabled>Importing...</Button>
           ) : (
             <Button disabled={!selectedFile} onClick={handleImport}>
               Import
@@ -338,6 +318,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
         </div>
       </div>
 
+      {/* Template Dialog */}
       <FieldSelectionDialog
         data={data}
         isOpen={isTemplateDialogOpen}

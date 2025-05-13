@@ -1,11 +1,10 @@
 "use client";
 
 import type { ClientField, Column } from "payload";
-
-import { Button, CloseMenuIcon, Table } from "@payloadcms/ui";
+import { Button, CloseMenuIcon, Table, useTheme } from "@payloadcms/ui";
 import React, { useEffect, useState } from "react";
-
 import { extractAllKeys } from "../lib/objectUtils.js";
+
 
 interface FieldSelectionDialogProps {
   data: any[];
@@ -26,6 +25,8 @@ export const FieldSelectionDialog: React.FC<FieldSelectionDialogProps> = ({
   onExport,
   template,
 }) => {
+    const { theme } = useTheme()
+
   const [fields, setFields] = useState<
     { isObject: boolean; key: string; level: number; path: string }[]
   >([]);
@@ -78,9 +79,7 @@ export const FieldSelectionDialog: React.FC<FieldSelectionDialogProps> = ({
     onExport(Array.from(selectedFields), includeDraft, exportType);
   };
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   const tableData = fields.map((field) => ({
     ...field,
@@ -143,119 +142,122 @@ export const FieldSelectionDialog: React.FC<FieldSelectionDialogProps> = ({
     },
   ];
 
+
+
+  // Set styles based on dark mode
+  const modalBg = theme === "dark" ? "#000000" : "#ffffff";
+  const textColor = theme === "dark" ? "#ffffff" : "#000000";
+  const overlayBg = "rgba(0, 0, 0, 0.8)";
+
   return (
-    <>
+    <div
+      style={{
+        alignItems: "center",
+        backgroundColor: overlayBg,
+        display: "flex",
+        height: "100vh",
+        justifyContent: "center",
+        left: 0,
+        pointerEvents: "auto",
+        position: "fixed",
+        top: 0,
+        width: "100vw",
+        zIndex: 999,
+      }}
+    >
       <div
         style={{
-          alignItems: "center",
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
-          display: "flex",
-          height: "100vh",
-          justifyContent: "center",
-          left: 0,
-          pointerEvents: "auto", // <- THIS is important
-          position: "fixed",
-          top: 0,
-          width: "100vw",
-          zIndex: 999, // Make sure it's high enough
+          backgroundColor: modalBg,
+          color: textColor,
+          boxSizing: "border-box",
+          maxHeight: "60vh",
+          maxWidth: "90vw",
+          overflowY: "auto",
+          paddingLeft: "20px",
+          paddingRight: "20px",
+          width: "60%",
+          zIndex: 1000,
         }}
       >
         <div
           style={{
-            backgroundColor: "rgba(0, 0, 0, 1)",
-            boxSizing: "border-box",
-            maxHeight: "60vh",
-            maxWidth: "90vw",
-            overflowY: "auto",
-            paddingLeft: "20px",
-            paddingRight: "20px",
-            width: "60%",
+            alignItems: "center",
+            backgroundColor: modalBg,
+            color: textColor,
+            display: "flex",
+            padding: "15px 16px",
+            position: "sticky",
+            top: 0,
             zIndex: 1000,
           }}
         >
+          <h2 style={{ fontSize: "29px", margin: 0 }}>Select Fields to Export</h2>
           <div
+            onClick={onClose}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") onClose();
+            }}
+            role="button"
             style={{
               alignItems: "center",
-              backgroundColor: "rgba(0, 0, 0, 1)",
+              cursor: "pointer",
               display: "flex",
-              padding: "15px 16px",
-              position: "sticky",
-              top: 0,
-              zIndex: 1000,
+              marginLeft: "auto",
             }}
+            tabIndex={0}
           >
-            <h2 style={{ fontSize: "29px", margin: 0 }}>
-              Select Fields to Export
-            </h2>
-            <div
-              onClick={onClose}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  onClose();
-                }
-              }}
-              role="button"
-              style={{
-                alignItems: "center",
-                cursor: "pointer",
-                display: "flex",
-                marginLeft: "auto",
-              }}
-              tabIndex={0}
-            >
-              <CloseMenuIcon />
-            </div>
-          </div>
-
-          <Table appearance="default" columns={columns} data={tableData} />
-          <div
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 1)",
-              borderBottomLeftRadius: "8px",
-              borderBottomRightRadius: "8px",
-              bottom: 0,
-              display: "flex",
-              gap: "12px",
-              justifyContent: "flex-end",
-              position: "sticky",
-            }}
-          >
-            {!template && (
-              <div
-                style={{ alignItems: "center", display: "flex", width: "100%" }}
-              >
-                <label
-                  style={{
-                    alignItems: "center",
-                    display: "flex",
-                    gap: "8px",
-                    justifyItems: "left",
-                  }}
-                >
-                  Include Draft
-                  <input
-                    aria-label="checkbox-input"
-                    checked={includeDraft}
-                    onChange={(e) => setIncludeDraft(e.target.checked)}
-                    style={{ cursor: "pointer" }}
-                    type="checkbox"
-                  />
-                </label>
-              </div>
-            )}
-
-            <Button onClick={onClose} round>
-              Cancel
-            </Button>
-            <Button onClick={() => handleExport("json")} round>
-              JSON
-            </Button>
-            <Button onClick={() => handleExport("excel")} round>
-              Excel
-            </Button>
+            <CloseMenuIcon />
           </div>
         </div>
+
+        <Table appearance="default" columns={columns} data={tableData} />
+
+        <div
+          style={{
+            backgroundColor: modalBg,
+            color: textColor,
+            borderBottomLeftRadius: "8px",
+            borderBottomRightRadius: "8px",
+            bottom: 0,
+            display: "flex",
+            gap: "12px",
+            justifyContent: "flex-end",
+            position: "sticky",
+          }}
+        >
+          {!template && (
+            <div style={{ alignItems: "center", display: "flex", width: "100%" }}>
+              <label
+                style={{
+                  alignItems: "center",
+                  display: "flex",
+                  gap: "8px",
+                  justifyItems: "left",
+                }}
+              >
+                Include Draft
+                <input
+                  aria-label="checkbox-input"
+                  checked={includeDraft}
+                  onChange={(e) => setIncludeDraft(e.target.checked)}
+                  style={{ cursor: "pointer" }}
+                  type="checkbox"
+                />
+              </label>
+            </div>
+          )}
+
+          <Button onClick={onClose} round>
+            Cancel
+          </Button>
+          <Button onClick={() => handleExport("json")} round>
+            JSON
+          </Button>
+          <Button onClick={() => handleExport("excel")} round>
+            Excel
+          </Button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
